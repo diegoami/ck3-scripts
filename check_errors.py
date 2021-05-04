@@ -1,10 +1,11 @@
 import os
 import re
-
+from collections import namedtuple
 zz_groups = []
+Ckperson = namedtuple('Ckperson', ['name', 'file_name', 'years', 'titles' ])
 
-dir_mds = '/home/diego/projects/ck3/ck3-murchad'
-ppl_file = '/home/diego/projects/ck3/ck3-murchad/people.md'
+dir_mds = os.environ.get("CK3_DIR")
+ppl_file = os.path.join(dir_mds, 'people.md')
 
 with open(ppl_file, 'r') as fp:
     for line in fp.readlines():
