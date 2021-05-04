@@ -4,13 +4,15 @@ import re
 import sys
 
 file_names = []
-#s = sys.argv[0]
-s = "Earl Farannan"    
+s = sys.argv[1]
+
+dir_mds = os.environ.get("CK_DIR")
+
 
 best_files, most_tabs = [], 100
-for file_name in os.listdir(os.getcwd()):
+for file_name in os.listdir(dir_mds):
     if ('.md' in file_name):
-        with open(file_name, 'r') as fp:
+        with open(os.path.join(dir_mds, file_name), 'r') as fp:
             for line in fp.readlines():
                 num_tabs = len([x for x in line if x == '\t'])
                 if s in line:
@@ -22,7 +24,7 @@ for file_name in os.listdir(os.getcwd()):
 for best_file in best_files:
     print(best_file)
     print("\n")
-    with open(best_file, 'r') as fp:
+    with open(os.path.join(dir_mds, best_file), 'r') as fp:
         for line in fp.readlines():
             if len(line.strip()) > 0:
                 print(line.rstrip())
