@@ -8,7 +8,7 @@ CkPerson = namedtuple('CkPerson', ['name', 'file_name', 'birth_year', 'death_yea
 dir_mds = os.environ.get("CK_DIR")
 ppl_file = os.path.join(dir_mds, 'people.md')
 ck_people = []
-dps = defaultdict(set)
+long_names_in_years = defaultdict(set)
 
 with open(ppl_file, 'r') as fp:
     for line in fp.readlines():
@@ -50,7 +50,16 @@ with open(ppl_file, 'r') as fp:
             print(ck_person)
             print(long_name)
             ck_people.append(ck_person)
-dps = {}
+
+long_names_in_years = defaultdict(set)
+short_names_in_years = defaultdict(set)
+
+
+short_name_to_long_name = {}
+long_name_to_short_name = {}
+long_name_to_file = {}
+file_to_long_name = {}
+years_to_long_names = {}
 
 for ck_person in ck_people:
      full_file = os.path.join(dir_mds, ck_person.file_name)
@@ -81,30 +90,27 @@ for ck_person in ck_people:
               print(long_name_title)
               print(ck_person.long_name.strip())
          else:
+             long_name_to_file[ck_person.long_name] = ck_person.file_name
+             file_to_long_name[ck_person.file_name] = ck_person.long_name
+             long_names_in_years[int(ck_person.birth_year)].add(ck_person.long_name)
              for oline in olines[1:]:
                  oline = oline.strip()
                  if len(oline) > 0 and not re.match('[\w\s\-\'\+]+\,\s+[0-9\-\s]+', oline) and not '?' in oline:
                      print(ck_person.file_name)
                      print(oline)
-
-             for oline in olines:
                  if ',' in oline:
-                      name, years = [ x.strip() for x in oline.strip().split(',')[:2]]
-                      years_first = int(years.split('-')[0])
-                      if not years_first in dps:
-                          dps[years_first] = set()
-                      dps[years_first].add(oline.strip())
-
-dpkeys = sorted( dps.keys())
+                     name, years = [x.strip() for x in oline.strip().split(',')[:2]]
+                     years_first = int(years.split('-')[0])
+                     short_names_in_years[years_first].add(name)
 
 
-for key in dpkeys:
-    if len(dps[key]) > 1:
-        print("========================")
-        print(key)
-        print("========================")
 
-        for vls in sorted(dps[key]):
-            print(vls)
+years_keys = sorted(long_names_in_years.keys())
+for key in years_keys:
+    for long_name in long_names_in_years[key]:
 
+        for short_name in short_names_in_years[key]:
+
+            if all([x in long_name for x in short_name.split()]):
+                print("{}: {} ({})".format(short_name, long_name, long_name_to_file[long_name]))
 
