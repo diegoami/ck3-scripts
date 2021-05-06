@@ -47,8 +47,6 @@ with open(ppl_file, 'r') as fp:
             else:
                 long_name = name + ', ' + birth_year + '-' + death_year + ', ' + house
             ck_person = CkPerson(name=name, file_name=file_name, birth_year=birth_year, death_year=death_year, title=title, house=house, long_name=long_name)
-            print(ck_person)
-            print(long_name)
             ck_people.append(ck_person)
 
 long_names_in_years = defaultdict(set)
@@ -61,30 +59,32 @@ long_name_to_file = {}
 file_to_long_name = {}
 years_to_long_names = {}
 
+short_names_in_file = defaultdict(set)
+files_containing_short_names = defaultdict(set)
+
 for ck_person in ck_people:
      full_file = os.path.join(dir_mds, ck_person.file_name)
-
      with open(full_file, 'r') as f:
          olines = []
-         in_family_tree = False
+         in_family_tree = 0
          for i, line in enumerate(f.readlines()):
               if i == 0:
-
                    long_name_title = line[2:].strip()
-              if in_family_tree:
+              if "FAMILY TREE" in line:
+                  in_family_tree = 1
+                  continue
+              if "`" in line and in_family_tree == 1:
+                  in_family_tree = 2
+                  continue
 
+              if in_family_tree == 2:
                    if "`" in line:
-                        in_family_tree = False
+                        in_family_tree = 0
                         break
                    else:
                         olines.append(line.rstrip())
-              else:
-                   if "`" in line:
-                        in_family_tree = True
-                        continue
 
          first_line = olines[0].strip()
-         print("===================================================")
          if not (first_line == long_name_title == ck_person.long_name):
               print(first_line)
               print(long_name_title)
@@ -95,22 +95,60 @@ for ck_person in ck_people:
              long_names_in_years[int(ck_person.birth_year)].add(ck_person.long_name)
              for oline in olines[1:]:
                  oline = oline.strip()
-                 if len(oline) > 0 and not re.match('[\w\s\-\'\+]+\,\s+[0-9\-\s]+', oline) and not '?' in oline:
-                     print(ck_person.file_name)
-                     print(oline)
                  if ',' in oline:
                      name, years = [x.strip() for x in oline.strip().split(',')[:2]]
                      years_first = int(years.split('-')[0])
                      short_names_in_years[years_first].add(name)
-
+                     short_names_in_file[ck_person.file_name].add(name)
+                     files_containing_short_names[name].add(ck_person.file_name)
 
 
 years_keys = sorted(long_names_in_years.keys())
 for key in years_keys:
     for long_name in long_names_in_years[key]:
-
+        write_lines = []
         for short_name in short_names_in_years[key]:
 
             if all([x in long_name for x in short_name.split()]):
-                print("{}: {} ({})".format(short_name, long_name, long_name_to_file[long_name]))
+                if long_name in long_name_to_short_name:
+                    print("Short name ambigous {}, {}".format(short_name, long_name_to_short_name[long_name]))
+                short_name_to_long_name[short_name] = long_name
+                long_name_to_short_name[long_name] = short_name
 
+for ck_person in ck_people:
+    full_file = os.path.join(dir_mds, ck_person.file_name)
+    with open(full_file, 'r') as f:
+        write_lines = []
+        all_lines = f.readlines()
+        empty_lines = 0
+        in_reference = 0
+        for all_line in all_lines:
+            if "ANCESTORS" in all_line or "REFERENCES" in all_line or all_line.startswith("* "):
+                in_reference = 1
+                continue
+            if "END REFERENCES" in all_line:
+                in_reference = 0
+                continue
+            if in_reference == 0 and len(all_line.strip()) == 0 :
+                empty_lines += 1
+                if empty_lines <= 1:
+                    write_lines.append(all_line)
+            elif in_reference == 0:
+                empty_lines = 0
+                write_lines.append(all_line)
+
+        write_lines.append('\n')
+        write_lines.append("# REFERENCES\n")
+        write_lines.append("\n")
+
+        write_lines.append("## ANCESTORS\n")
+        for short_name in short_names_in_file[ck_person.file_name]:
+
+            if short_name in short_name_to_long_name:
+                long_name = short_name_to_long_name[short_name]
+                file_l_name = long_name_to_file[long_name].split('/')[1]
+                write_lines.append("* [{}]({})\n".format(long_name, file_l_name))
+
+    with open(full_file, 'w') as f:
+
+        f.writelines(write_lines)
