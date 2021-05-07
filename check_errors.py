@@ -7,6 +7,7 @@ zz_groups = []
 CkPerson = namedtuple('CkPerson', ['name', 'file_name', 'birth_year', 'death_year', 'title', 'house', 'long_name' ])
 
 dir_mds = os.environ.get("CK_DIR")
+history_mds = os.path.join(dir_mds, 'h')
 ppl_file = os.path.join(dir_mds, 'people.md')
 ck_people = []
 long_names_in_years = defaultdict(set)
@@ -15,8 +16,8 @@ with open(ppl_file, 'r') as fp:
     for line in fp.readlines():
         name = file_name = title = house = birth_year = death_year = ''
 
-        zm = re.search('\[([\w\s\-\+]+)\]\((.*?)\)\s+\(([0-9\-\s]+)\)', line)
-        zo = re.search('\*(.*)\*', line)
+        zm = re.search(r'\[([\w\s\-\+]+)\]\((.*?)\)\s+\(([0-9\-\s]+)\)', line)
+        zo = re.search(r'\*(.*)\*', line)
 
         if zm:
             zz_groups.append(zm.groups())
@@ -107,6 +108,7 @@ for ck_person in ck_people:
                      files_containing_short_names[name].add(ck_person.file_name)
 
 
+
 years_keys = sorted(long_names_in_years.keys())
 for key in years_keys:
     for long_name in long_names_in_years[key]:
@@ -118,6 +120,7 @@ for key in years_keys:
                     print("Short name ambigous {}, {}".format(short_name, long_name_to_short_name[long_name]))
                 short_name_to_long_name[short_name] = long_name
                 long_name_to_short_name[long_name] = short_name
+
 
 for ck_person in ck_people:
     full_file = os.path.join(dir_mds, ck_person.file_name)
