@@ -109,8 +109,8 @@ for ck_person in ck_people:
                      short_names_in_years[years_first].add(name)
                      short_names_in_file[ck_person.file_name].add(name)
                      files_containing_short_names[name].add(ck_person.file_name)
-
-
+                     if '  ' in oline:
+                         print('{}:{} : suspicious spaces'.format(ck_person.file_name, name))
 
 years_keys = sorted(long_names_in_years.keys())
 for key in years_keys:
