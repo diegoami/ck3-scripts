@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 from collections import namedtuple
 from collections import defaultdict
 zz_groups = []
@@ -84,6 +85,9 @@ for ck_person in ck_people:
                    else:
                         olines.append(line.rstrip())
 
+         if not olines or in_family_tree != 0:
+             print("{} is invalid".format(full_file))
+             sys.exit(1)
          first_line = olines[0].strip()
          if not (first_line == long_name_title == ck_person.long_name):
               print(first_line)
@@ -148,7 +152,6 @@ for ck_person in ck_people:
                 long_name = short_name_to_long_name[short_name]
                 file_l_name = long_name_to_file[long_name].split('/')[1]
                 write_lines.append("* [{}]({})\n".format(long_name, file_l_name))
-
+        write_lines.append("#### END REFERENCES")
     with open(full_file, 'w') as f:
-
         f.writelines(write_lines)
