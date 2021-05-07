@@ -3,11 +3,14 @@ import re
 import sys
 from collections import namedtuple
 from collections import defaultdict
+from find_references_history import find_references
+
 zz_groups = []
 CkPerson = namedtuple('CkPerson', ['name', 'file_name', 'birth_year', 'death_year', 'title', 'house', 'long_name' ])
 
 dir_mds = os.environ.get("CK_DIR")
 history_mds = os.path.join(dir_mds, 'h')
+history_references = find_references(history_mds)
 ppl_file = os.path.join(dir_mds, 'people.md')
 ck_people = []
 long_names_in_years = defaultdict(set)
@@ -155,6 +158,12 @@ for ck_person in ck_people:
                 long_name = short_name_to_long_name[short_name]
                 file_l_name = long_name_to_file[long_name].split('/')[1]
                 write_lines.append("* [{}]({})\n".format(long_name, file_l_name))
+        write_lines.append("\n")
+        write_lines.append("## HISTORY")
+        write_lines.append("\n")
+        if ck_person.file_name in history_references:
+            for history_name in sorted(history_references[ck_person.file_name]):
+                write_lines.append("* [{}](../h/{})\n".format(history_name, history_name))
         write_lines.append("#### END REFERENCES")
     with open(full_file, 'w') as f:
         f.writelines(write_lines)
