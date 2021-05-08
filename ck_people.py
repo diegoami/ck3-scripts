@@ -58,8 +58,11 @@ def complete_person(ck_person):
             ck_person.name, ck_person.file_name, ck_person.birth_year, ck_person.death_year, ck_person.house))
     return ck_person
 
-def get_ck_people(ppl_file):
+def get_ck_people(ppl_file=None):
     ck_people = []
+    if not ppl_file:
+        dir_mds = os.environ.get("CK_DIR")
+        ppl_file = os.path.join(dir_mds, 'people.md')
     with open(ppl_file, 'r') as fp:
         for line in fp.readlines():
             ck_person = get_ck_person(line)

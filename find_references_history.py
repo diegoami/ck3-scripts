@@ -1,9 +1,12 @@
 import os
 import re
 from collections import defaultdict
+from ck_people import get_ck_people
 
 def find_references(history_mds):
     history_maps = defaultdict(set)
+    ck_people = get_ck_people()
+    all_file_names = [ck_person.file_name for ck_person in ck_people]
     for file_name in os.listdir(history_mds):
         if ('.md' in file_name):
             with open(os.path.join(history_mds, file_name), 'r') as fp:
@@ -12,11 +15,14 @@ def find_references(history_mds):
             for zm in zms:
 
                 text, url = zm[0].replace('*',''), zm[1]
+                url_p = url[3:]
+                l_url = url.split('/')
                 if not ('.md' in url):
                     continue
                 if not os.path.isfile(os.path.join(history_mds, url)):
                     print("Cannot find {} in {}".format(url, file_name))
-                l_url = url.split('/')
+                if not url_p in all_file_names:
+                    print("{} is not listed in people".format(url_p))
                 if (len(l_url) < 3):
                     print("{} : {} not correct".format(file_name, url))
 

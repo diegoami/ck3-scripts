@@ -1,8 +1,6 @@
 import os
 
-
 import sys
-
 
 
 dir_mds = os.environ.get("CK_DIR")
