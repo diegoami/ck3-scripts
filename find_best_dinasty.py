@@ -1,5 +1,4 @@
 import os
-
 import sys
 
 
@@ -7,7 +6,7 @@ dir_mds = os.environ.get("CK_DIR")
 person_mds = os.path.join(dir_mds, 'p')
 
 def find_best_dinasty(person_mds, s):
-    fathers, mothers = set(), set()
+
     best_files, most_tabs = [], 100
     for file_name in os.listdir(person_mds):
         if ('.md' in file_name):

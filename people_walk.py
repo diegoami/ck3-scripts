@@ -1,0 +1,95 @@
+import os
+from ck_people import get_ck_people
+from file_parse import find_family_tree, split_file_references
+from collections import defaultdict
+from itertools import chain
+
+
+def living_in(target_year, all_names):
+    all_birthdays = []
+    for year, lines in chain(all_names["short_lines_in_years"].items(), all_names["long_lines_in_years"].items()):
+        if target_year >= year:
+            for line in lines:
+                life_years = line.split(',')[1].split('-')
+                if len(life_years) > 1 and life_years[1]:
+                    birth_year, death_year = int(life_years[0]), int(life_years[1])
+                    if death_year-target_year > 0:
+                        all_birthdays.append((target_year - birth_year, line, death_year-target_year))
+                        #print('{} is now {} years old, will die in {} years.'.format(line, target_year-birth_year, death_year-target_year) )
+                else:
+                    birth_year = int(life_years[0])
+                    all_birthdays.append((target_year-birth_year, line, "UNKNOWN"))
+                    #print('{} is now {} years old, death unknown.'.format(line, target_year-birth_year) )
+    allbs = sorted(all_birthdays, key=lambda x:x[0], reverse=True)
+    for x in allbs:
+        print('{} is now {} years old, will die in {}'.format(x[1], x[0], x[2]))
+
+def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
+    if not dir_mds:
+        dir_mds = os.environ.get("CK_DIR")
+
+    if not ppl_file:
+        ppl_file = os.path.join(dir_mds, 'people.md')
+    if not ck_people:
+        ck_people = get_ck_people(ppl_file)
+    long_names_in_years = defaultdict(set)
+    short_names_in_years = defaultdict(set)
+    short_lines_in_years = defaultdict(set)
+    long_lines_in_years = defaultdict(set)
+
+    short_name_to_long_name = {}
+    long_name_to_short_name = {}
+    long_name_to_file = {}
+    file_to_long_name = {}
+    short_names_in_file = defaultdict(set)
+    files_containing_short_names = defaultdict(set)
+
+    for ck_person in ck_people:
+        full_file = os.path.join(dir_mds, ck_person.file_name)
+        olines, plines, alines = find_family_tree(full_file)
+        long_name_title = plines[0][2:].strip()
+        first_line = olines[0].strip()
+        if not (first_line == long_name_title == ck_person.long_name):
+            print(first_line)
+            print(long_name_title)
+            print(ck_person.long_name.strip())
+        else:
+            long_name_to_file[ck_person.long_name] = ck_person.file_name
+            file_to_long_name[ck_person.file_name] = ck_person.long_name
+
+            long_names_in_years[int(ck_person.birth_year)].add(ck_person.long_name)
+            long_lines_in_years[int(ck_person.birth_year)].add(first_line)
+
+            for oline in olines[1:]:
+                oline = oline.strip()
+                if ',' in oline:
+                    name, years = [x.strip() for x in oline.strip().split(',')[:2]]
+                    years_first = int(years.split('-')[0])
+                    short_names_in_years[years_first].add(name)
+                    short_lines_in_years[years_first].add(oline)
+                    short_names_in_file[ck_person.file_name].add(name)
+                    files_containing_short_names[name].add(ck_person.file_name)
+                    if '  ' in oline:
+                        print('{}:{} : suspicious spaces'.format(ck_person.file_name, name))
+
+    years_keys = sorted(long_names_in_years.keys())
+    for key in years_keys:
+        for long_name in long_names_in_years[key]:
+            for short_name in short_names_in_years[key]:
+
+                if all([x in long_name for x in short_name.split()]):
+                    if long_name in long_name_to_short_name:
+                        print("Short name ambigous {}, {}".format(short_name, long_name_to_short_name[long_name]))
+                    short_name_to_long_name[short_name] = long_name
+                    long_name_to_short_name[long_name] = short_name
+
+    return {"long_name_to_file": long_name_to_file,
+            "file_to_long_name": file_to_long_name,
+            "long_names_in_years": long_names_in_years,
+            "short_names_in_years": short_names_in_years,
+            "short_names_in_file": short_names_in_file,
+            "files_containing_short_names": files_containing_short_names,
+            "short_name_to_long_name": short_name_to_long_name,
+            "long_name_to_short_name": long_name_to_short_name,
+            "short_lines_in_years": short_lines_in_years,
+            "long_lines_in_years": long_lines_in_years}
