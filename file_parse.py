@@ -34,8 +34,9 @@ def find_family_tree(full_file):
 
 
 def split_file_references(full_file):
+    before_lines, ref_lines, after_lines = [], [], []
     with open(full_file, 'r') as f:
-        before_lines, ref_lines, after_lines = [], [], []
+       
         all_lines = f.readlines()
         empty_lines = 0
         in_reference = 0
@@ -56,5 +57,33 @@ def split_file_references(full_file):
             elif in_reference == 1:
                 ref_lines.append(all_line)
             elif in_reference == 2 and not "END REFERENCES" in all_line :
+                after_lines.append(all_line)
+    return before_lines, ref_lines, after_lines
+
+
+def split_portrait_references(full_file):
+    before_lines, ref_lines, after_lines = [], [], []
+    with open(full_file, 'r') as f:
+
+        all_lines = f.readlines()
+        empty_lines = 0
+        in_portraits = 0
+        for all_line in all_lines:
+            if "PORTRAITS" in all_line:
+                in_portraits = 1
+                continue
+            elif "END PORTRAIS" in all_line:
+                in_portraits = 2
+                continue
+            elif in_portraits == 0 and len(all_line.strip()) == 0:
+                empty_lines += 1
+                if empty_lines <= 1:
+                    before_lines.append(all_line)
+            elif in_portraits == 0:
+                empty_lines = 0
+                before_lines.append(all_line)
+            elif in_portraits == 1:
+                ref_lines.append(all_line)
+            elif in_portraits == 2 and not "END PORTRAITS" in all_line:
                 after_lines.append(all_line)
     return before_lines, ref_lines, after_lines

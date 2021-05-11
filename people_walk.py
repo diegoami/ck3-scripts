@@ -15,7 +15,6 @@ def living_in(target_year, all_names):
                     birth_year, death_year = int(life_years[0]), int(life_years[1])
                     if death_year-target_year > 0:
                         all_birthdays.append((target_year - birth_year, line, death_year-target_year))
-                        #print('{} is now {} years old, will die in {} years.'.format(line, target_year-birth_year, death_year-target_year) )
                 else:
                     birth_year = int(life_years[0])
                     all_birthdays.append((target_year-birth_year, line, "UNKNOWN"))
@@ -23,6 +22,35 @@ def living_in(target_year, all_names):
     allbs = sorted(all_birthdays, key=lambda x:x[0], reverse=True)
     for x in allbs:
         print('{} is now {} years old, will die in {}'.format(x[1], x[0], x[2]))
+
+def check_photos(target_year, all_names, dir_mds):
+    all_birthdays = []
+    for year, lines in all_names["long_lines_in_years"].items():
+        if target_year >= year:
+            for line in lines:
+                life_years = line.split(',')[1].split('-')
+                long_name = line.split(',')[0]
+                file_name = all_names["long_name_to_file"][line]
+                dir_name, file_extension = os.path.splitext(file_name)
+                dir_img = os.path.join(dir_mds, dir_name)
+                age_years = []
+                if len(life_years) > 1 and life_years[1]:
+                    birth_year, death_year = int(life_years[0]), int(life_years[1])
+                else:
+                    birth_year, death_year = int(life_years[0]), None
+                if os.path.isdir(dir_img):
+                    for img_name in os.listdir(dir_img):
+                        img_year_s, img_ext = os.path.splitext(img_name)
+                        img_year = int(img_year_s)
+                        age_years.append(img_year-birth_year)
+                if not death_year or death_year > target_year:
+                    all_birthdays.append((target_year - birth_year, long_name, age_years, death_year))
+    allbs = sorted(all_birthdays, key=lambda x: x[0], reverse=True)
+    for x in allbs:
+        if x[2]:
+            print('{} is now {} years old, photos at {} '.format(x[1], x[0], x[2]))
+        else:
+            print('{} is now {} years old, NO PHOTOS'.format(x[1], x[0], x[2]))
 
 def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
     if not dir_mds:
