@@ -23,7 +23,7 @@ def add_portraits(dir_mds, ck_people, all_names):
             for img_name in os.listdir(dir_img):
                 img_year, img_ext =  os.path.splitext(img_name)
                 write_lines.append("## {}\n".format(img_year))
-                write_lines.append("![{}]({})\n\n".format(img_year, os.path.join(dir_name.split('/')[-1], img_name)))
+                write_lines.append("![{}]({})\n\n".format(img_year, dir_name.split('/')[-1]+ '/' +img_name))
 
             write_lines.append("#### END PORTRAITS\n")
             write_lines.append("\n")
