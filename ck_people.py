@@ -76,18 +76,19 @@ def add_ck_person(ck_people, ppl_file, new_person):
     with open(ppl_file, 'w') as fp:
         fp.write('# PEOPLE\n\n')
         added_person = False
-        for ck_person in ck_people:
+        for index, ck_person in enumerate(ck_people):
             if new_person.name == ck_person.name:
                 print("{} exists".format(new_person.name))
                 added_person = True
                 continue
-            if new_person.name < ck_person.name and not added_person:
+            if not added_person and new_person.name < ck_person.name:
                 fp.write('{}\n'.format(new_person.full_line.rstrip()))
                 print("{} added".format(new_person.name))
-
                 added_person = True
             fp.write('{}\n'.format(ck_person.full_line.rstrip()))
-
+        if not added_person:
+            fp.write('{}\n'.format(new_person.full_line.rstrip()))
+            added_person = True
 
 def add_person(s):
     dir_mds = os.environ.get("CK_DIR")

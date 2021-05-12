@@ -105,9 +105,9 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
         for long_name in long_names_in_years[key]:
             for short_name in short_names_in_years[key]:
 
-                if all([x in long_name for x in short_name.split()]):
+                if all([x in long_name.split() for x in short_name.split()]):
                     if long_name in long_name_to_short_name:
-                        print("Short name ambigous {}, {}".format(short_name, long_name_to_short_name[long_name]))
+                        print("Short name ambigous {}, {} for {}".format(short_name, long_name_to_short_name[long_name], key))
                     short_name_to_long_name[short_name] = long_name
                     long_name_to_short_name[long_name] = short_name
 

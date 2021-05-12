@@ -50,4 +50,7 @@ if __name__ == "__main__":
     #ck_people.add_person("Farannan,1239,,Duke of Munster, gCais-Mathrafal")
     #ck_people.add_person("Aed Barrdubson,1261,,Earl of West Riding, Got")
     #ck_people.add_person("Flanchad,1231,,Earl of Lincolnshire, Michael")
-    ck_people.add_person("Tailefhlaith Barrdubdohtor,1252,,Countess of Breifne, Got")
+    #ck_people.add_person("Tailefhlaith Barrdubdohtor,1252,,Countess of Breifne, Got")
+    #ck_people.add_person("Muirenn I nic Gilla-Ruad,1165,1230,, gCais-Cruachu")
+    #ck_people.add_person("David,1231,,Earl of Berkshire,Clare")
+    ck_people.add_person("Ultan mac Gelgeis,1249,,Earl of Ossory,Briain")
