@@ -3,7 +3,7 @@ import ck_people
 
 def find_family_tree(full_file):
     olines, plines, alines = [], [], []
-    with open(full_file, 'r') as f:
+    with open(full_file, 'r', encoding='latin1') as f:
         in_family_tree = 0
         for i, line in enumerate(f.readlines()):
 
