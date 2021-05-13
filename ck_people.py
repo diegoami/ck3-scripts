@@ -112,5 +112,8 @@ def add_person(s):
 
     else:
         print("{} exists".format(full_file_name))
+    print(to_add_person.full_line)
+    return to_add_person.full_line
+
 
 
