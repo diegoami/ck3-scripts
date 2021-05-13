@@ -35,7 +35,7 @@ def find_family_tree(full_file):
 
 def split_file_references(full_file):
     before_lines, ref_lines, after_lines = [], [], []
-    with open(full_file, 'r') as f:
+    with open(full_file, 'r', encoding='latin1') as f:
        
         all_lines = f.readlines()
         empty_lines = 0
@@ -63,7 +63,7 @@ def split_file_references(full_file):
 
 def split_portrait_references(full_file):
     before_lines, ref_lines, after_lines = [], [], []
-    with open(full_file, 'r') as f:
+    with open(full_file, 'r', encoding='latin1') as f:
 
         all_lines = f.readlines()
         empty_lines = 0

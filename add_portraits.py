@@ -12,6 +12,7 @@ def add_portraits(dir_mds, ck_people, all_names):
         full_file = os.path.join(dir_mds, ck_person.file_name)
         dir_name, file_extension = os.path.splitext(ck_person.file_name)
         dir_img = os.path.join(dir_mds, dir_name)
+        os.makedirs(dir_img, exist_ok=True)
         if os.path.isdir(dir_img):
             before_lines, ref_lines, after_lines = split_portrait_references(full_file)
             write_lines = [] + before_lines
@@ -28,7 +29,7 @@ def add_portraits(dir_mds, ck_people, all_names):
             write_lines.append("#### END PORTRAITS\n")
             write_lines.append("\n")
             write_lines += after_lines
-            with open(full_file, 'w') as f:
+            with open(full_file, 'w', encoding='latin1') as f:
                 f.writelines(write_lines)
 
 if __name__ == "__main__":

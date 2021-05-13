@@ -3,13 +3,13 @@ import re
 
 def do_replace(source, zz_st, format_tt):
      for zz_s in zz_st:   
-        with open(source, 'r') as fa:
+        with open(source, 'r', encoding='latin1') as fa:
             file_source = fa.read()
             old, new = zz_s[1][1], format_tt.format(zz_s[0])
             print('replacing {} with {}'.format(old, new))
             replace_file = file_source.replace(old, new)
             
-        with open(source, 'w') as fw:
+        with open(source, 'w', encoding='latin1') as fw:
             fw.write(replace_file)    
 
 dir_mds = 'C:\Users\diego\ck3aars\ck3-murchad\p'
@@ -26,7 +26,7 @@ for file_name in os.listdir(dir_mds):
 zz_groups = []
 
     
-with open(ppl_file, 'r') as fp:
+with open(ppl_file, 'r', encoding='latin1') as fp:
     for line in fp.readlines():
         zm = re.search('\[([\w\s\-\+]+)\]\((.*?)\)', line)
         if zm:

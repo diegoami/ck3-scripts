@@ -11,7 +11,7 @@ def find_best_dinasty(person_mds, s):
     for file_name in os.listdir(person_mds):
         if ('.md' in file_name):
 
-            with open(os.path.join(person_mds, file_name), 'r') as fp:
+            with open(os.path.join(person_mds, file_name), 'r', encoding='latin1') as fp:
                 lines = fp.readlines()
                 if (len(lines) < 37):
                     continue
@@ -30,7 +30,7 @@ def find_best_dinasty(person_mds, s):
     for best_file in best_files:
         print(best_file)
         print("\n")
-        with open(os.path.join(person_mds, best_file), 'r') as fp:
+        with open(os.path.join(person_mds, best_file), 'r', encoding='latin1') as fp:
             for line in fp.readlines():
                 if len(line.strip()) > 0:
                     print(line.rstrip())

@@ -8,9 +8,9 @@ from people_walk import get_all_names
 
 if __name__ == "__main__":
     dir_mds = os.environ.get("CK_DIR")
-
-    ck_people = get_ck_people()
     ppl_file = os.path.join(dir_mds, 'people.md')
+
+    ck_people = get_ck_people(ppl_file)
     all_names = get_all_names(dir_mds, ppl_file, ck_people)
     print(all_names["short_name_to_long_name"])
     print(all_names["long_name_to_short_name"])

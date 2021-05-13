@@ -63,7 +63,7 @@ def get_ck_people(ppl_file=None):
     if not ppl_file:
         dir_mds = os.environ.get("CK_DIR")
         ppl_file = os.path.join(dir_mds, 'people.md')
-    with open(ppl_file, 'r') as fp:
+    with open(ppl_file, 'r', encoding='latin1') as fp:
         for line in fp.readlines():
             ck_person = get_ck_person(line)
             if ck_person:
@@ -73,7 +73,7 @@ def get_ck_people(ppl_file=None):
 def add_ck_person(ck_people, ppl_file, new_person):
     new_person = complete_person(new_person)
     print(new_person)
-    with open(ppl_file, 'w') as fp:
+    with open(ppl_file, 'w', encoding='latin1') as fp:
         fp.write('# PEOPLE\n\n')
         added_person = False
         for index, ck_person in enumerate(ck_people):
@@ -101,7 +101,7 @@ def add_person(s):
     add_ck_person(ck_people, out_file, to_add_person)
     full_file_name = os.path.join(dir_mds, 'p', to_add_person.file_name)
     if not os.path.isfile(full_file_name):
-        with open(full_file_name, 'w') as fw:
+        with open(full_file_name, 'w', encoding='latin1') as fw:
             fw.write("# {}\n".format(to_add_person.long_name))
             fw.write("\n")
             fw.write("## FAMILY TREE\n")

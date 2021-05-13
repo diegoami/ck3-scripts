@@ -51,7 +51,7 @@ def add_references(dir_mds, ck_people, all_names):
                 write_lines.append("* [{}](../h/{})\n".format(history_name, history_name))
         write_lines.append("\n#### END REFERENCES\n")
         write_lines += after_lines
-        with open(full_file, 'w') as f:
+        with open(full_file, 'w', encoding='latin1') as f:
             f.writelines(write_lines)
 
 
