@@ -3,7 +3,7 @@ from ck_people import get_ck_people
 from file_parse import find_family_tree, split_file_references
 from collections import defaultdict
 from itertools import chain
-
+import fileinput
 
 def living_in(target_year, all_names):
     all_birthdays = []
@@ -44,13 +44,13 @@ def check_photos(target_year, all_names, dir_mds):
                         img_year = int(img_year_s)
                         age_years.append(img_year-birth_year)
                 if not death_year or death_year > target_year:
-                    all_birthdays.append((target_year - birth_year, long_name, age_years, death_year))
+                    all_birthdays.append((target_year - birth_year, long_name, age_years, death_year, birth_year))
     allbs = sorted(all_birthdays, key=lambda x: x[0], reverse=True)
     for x in allbs:
         if x[2]:
-            print('{} is now {} years old, photos at {} '.format(x[1], x[0], x[2]))
+            print('{}, born in {}, is now {} years old, photos at {} '.format(x[1], x[4], x[0], x[2]))
         else:
-            print('{} is now {} years old, NO PHOTOS'.format(x[1], x[0], x[2]))
+            print('{}, born in {}, is now {} years old, NO PHOTOS'.format(x[1], x[4], x[0], x[2]))
 
 def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
     if not dir_mds:
@@ -64,7 +64,7 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
     short_names_in_years = defaultdict(set)
     short_lines_in_years = defaultdict(set)
     long_lines_in_years = defaultdict(set)
-
+    death_fixes = defaultdict(set)
     short_name_to_long_name = {}
     long_name_to_short_name = {}
     long_name_to_file = {}
@@ -78,13 +78,13 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
         long_name_title = plines[0][2:].strip()
         first_line = olines[0].strip()
         if not (first_line == long_name_title == ck_person.long_name):
-            print(first_line)
-            print(long_name_title)
-            print(ck_person.long_name.strip())
+            plines[0] = "# {}".format(ck_person.long_name)
+            olines[0] = ck_person.long_name.strip()
+            print("Fixing {}".format(ck_person.long_name))
+            death_fixes.add(ck_person)
         else:
             long_name_to_file[ck_person.long_name] = ck_person.file_name
             file_to_long_name[ck_person.file_name] = ck_person.long_name
-
             long_names_in_years[int(ck_person.birth_year)].add(ck_person.long_name)
             long_lines_in_years[int(ck_person.birth_year)].add(first_line)
 
@@ -120,4 +120,19 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
             "short_name_to_long_name": short_name_to_long_name,
             "long_name_to_short_name": long_name_to_short_name,
             "short_lines_in_years": short_lines_in_years,
-            "long_lines_in_years": long_lines_in_years}
+            "long_lines_in_years": long_lines_in_years,
+            "death_fixes": death_fixes }
+
+def fix_deaths(dir_mds, all_names):
+    death_fixes = all_names["death_fixes"]
+    for ck_person in death_fixes:
+        long_name = ck_person.long_name
+        short_name = all_names["long_name_to_short_name"][long_name]
+        file_names = all_names["files_containing_short_names"][short_name]
+        orig = "{}, {}-".format(short_name, ck_person.birth_year)
+        target = "{}, {}-{}".format(short_name, ck_person.birth_year, ck_person.death_year)
+        for file_name in file_names:
+            full_file = os.path.join(dir_mds, file_name)
+            with fileinput.FileInput(full_file, inplace=True) as file:
+                for line in file:
+                    print(line.replace(orig, target), end='')

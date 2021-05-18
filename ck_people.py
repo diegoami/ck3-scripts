@@ -12,7 +12,7 @@ def get_long_name_from_person(name, title, birth_year, death_year, house):
             long_name = title + ' ' + name + ', ' + birth_year + '-' + death_year + ', ' + house
     else:
         long_name = name + ', ' + birth_year + '-' + death_year + ', ' + house
-    return long_name
+    return long_name.strip()
 
 def get_ck_person(line):
     full_line = line
