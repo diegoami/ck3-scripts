@@ -122,16 +122,35 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
             "long_lines_in_years": long_lines_in_years,
             "death_fixes": death_fixes }
 
-def fix_deaths(dir_mds, all_names):
-    death_fixes = all_names["death_fixes"]
-    for ck_person in death_fixes:
-        long_name = ck_person.long_name
-        short_name = all_names["long_name_to_short_name"][long_name]
+def fix_short_deaths(all_names, short_name, birth_year, death_year):
+    if short_name in all_names["files_containing_short_names"]:
         file_names = all_names["files_containing_short_names"][short_name]
-        orig = "{}, {}-".format(short_name, ck_person.birth_year)
-        target = "{}, {}-{}".format(short_name, ck_person.birth_year, ck_person.death_year)
+        orig = "{}, {}-".format(short_name, birth_year)
+        target = "{}, {}-{}".format(short_name, birth_year, death_year)
         for file_name in file_names:
             full_file = os.path.join(dir_mds, file_name)
             with fileinput.FileInput(full_file, inplace=True) as file:
                 for line in file:
                     print(line.replace(orig, target), end='')
+
+def fix_deaths(dir_mds, all_names):
+    death_fixes = all_names["death_fixes"]
+    for ck_person in death_fixes:
+        long_name = ck_person.long_name
+        if long_name in all_names["long_name_to_short_name"]:
+            short_name = all_names["long_name_to_short_name"][long_name]
+            birth_year = ck_person.birth_year
+            death_year = ck_person.death_year
+            if short_name in all_names["files_containing_short_names"]:
+                file_names = all_names["files_containing_short_names"][short_name]
+                orig = "{}, {}-".format(short_name, birth_year)
+                target = "{}, {}-{}".format(short_name, birth_year, death_year)
+                for file_name in file_names:
+                    full_file = os.path.join(dir_mds, file_name)
+                    with fileinput.FileInput(full_file, inplace=True) as file:
+                        for line in file:
+                            print(line.replace(orig, target), end='')
+
+if __name__ == "__main__":
+    dir_mds = os.environ.get("CK_DIR")
+    people_mds = os.path.join(dir_mds, 'p')

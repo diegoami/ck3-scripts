@@ -2,18 +2,20 @@ import ck_people
 
 import sys
 import os
+from functools import partial
 
 from find_best_dinasty import find_best_dinasty
 
 if __name__ == "__main__":
-    #s = sys.argv[1]
-    #ck_people.add_person(s)
-    #ck_people.add_person("Faelan mac Brian,1084,1136,High King of Ireland,Briain")
-    #ck_people.add_person("Rhufon ap Gruffydd,1140,1166,Petty King of Deheubarth,Caerloyw-Penfro")
-    #ck_people.add_person("Elisabet Gudrodsdatter,1083,1148,,Crovan")
+
 
     dir_mds = os.environ.get("CK_DIR")
     person_mds = os.path.join(dir_mds, 'p')
+    _c = ck_people.add_person
+    def _f(s):
+        return find_best_dinasty(person_mds, s)
+    #_c("Hunydd ferch Bleddyn,1042,1099,,Mathrafal")
+    _f("Hunydd")
     #find_best_dinasty(person_mds, "Gruffydd Caerloyw-Penfro")
     #ck_people.add_person("Clydog ap Talorc,1227,,Lord of Ynys Mon,Ruairc")
     #ck_people.add_person("Elen ferch Idwal,1092,1174,Lady of Penllyn,Seisyll")
@@ -60,4 +62,3 @@ if __name__ == "__main__":
     #ck_people.add_person("Etain nig Aindle,1267,,Lady of Brycheniog,Briain")
     #ck_people.add_person("Hywela ferch LLes,1242,,Lady of Merionnydd,Ynys Cybi")
     #ck_people.add_person("Elidyr ab Iorwerth,1085,1150,,Caerloyw-Tyddewi")
-    #ck_people.add_person("Hunydd ferch Bleddyn,1042,1099,,Mathrafal")

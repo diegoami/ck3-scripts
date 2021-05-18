@@ -1,6 +1,6 @@
 import os
 import sys
-
+from file_parse import find_family_tree
 
 dir_mds = os.environ.get("CK_DIR")
 person_mds = os.path.join(dir_mds, 'p')
@@ -30,10 +30,10 @@ def find_best_dinasty(person_mds, s):
     for best_file in best_files:
         print(best_file)
         print("\n")
-        with open(os.path.join(person_mds, best_file), 'r', encoding='latin1') as fp:
-            for line in fp.readlines():
-                if len(line.strip()) > 0:
-                    print(line.rstrip())
+        full_file = os.path.join(person_mds, best_file)
+        olines, plines, alines = find_family_tree(full_file)
+        for line in olines:
+            print(line)
 
 
 if __name__ == "__main__":
