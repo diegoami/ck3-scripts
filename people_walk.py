@@ -81,6 +81,9 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
             plines[0] = "# {}".format(ck_person.long_name)
             olines[0] = ck_person.long_name
             print("Fixing {}".format(ck_person.long_name))
+            with fileinput.FileInput(full_file, inplace=True) as file:
+                for line in file:
+                    print(line.replace(first_line, ck_person.long_name), end='')
             death_fixes.add(ck_person)
         long_name_to_file[ck_person.long_name] = ck_person.file_name
         file_to_long_name[ck_person.file_name] = ck_person.long_name
