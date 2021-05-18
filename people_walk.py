@@ -64,7 +64,7 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
     short_names_in_years = defaultdict(set)
     short_lines_in_years = defaultdict(set)
     long_lines_in_years = defaultdict(set)
-    death_fixes = defaultdict(set)
+    death_fixes = set()
     short_name_to_long_name = {}
     long_name_to_short_name = {}
     long_name_to_file = {}
@@ -79,26 +79,25 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
         first_line = olines[0].strip()
         if not (first_line == long_name_title == ck_person.long_name):
             plines[0] = "# {}".format(ck_person.long_name)
-            olines[0] = ck_person.long_name.strip()
+            olines[0] = ck_person.long_name
             print("Fixing {}".format(ck_person.long_name))
             death_fixes.add(ck_person)
-        else:
-            long_name_to_file[ck_person.long_name] = ck_person.file_name
-            file_to_long_name[ck_person.file_name] = ck_person.long_name
-            long_names_in_years[int(ck_person.birth_year)].add(ck_person.long_name)
-            long_lines_in_years[int(ck_person.birth_year)].add(first_line)
+        long_name_to_file[ck_person.long_name] = ck_person.file_name
+        file_to_long_name[ck_person.file_name] = ck_person.long_name
+        long_names_in_years[int(ck_person.birth_year)].add(ck_person.long_name)
+        long_lines_in_years[int(ck_person.birth_year)].add(first_line)
 
-            for oline in olines[1:]:
-                oline = oline.strip()
-                if ',' in oline:
-                    name, years = [x.strip() for x in oline.strip().split(',')[:2]]
-                    years_first = int(years.split('-')[0])
-                    short_names_in_years[years_first].add(name)
-                    short_lines_in_years[years_first].add(oline)
-                    short_names_in_file[ck_person.file_name].add(name)
-                    files_containing_short_names[name].add(ck_person.file_name)
-                    if '  ' in oline:
-                        print('{}:{} : suspicious spaces'.format(ck_person.file_name, name))
+        for oline in olines[1:]:
+            oline = oline.strip()
+            if ',' in oline:
+                name, years = [x.strip() for x in oline.strip().split(',')[:2]]
+                years_first = int(years.split('-')[0])
+                short_names_in_years[years_first].add(name)
+                short_lines_in_years[years_first].add(oline)
+                short_names_in_file[ck_person.file_name].add(name)
+                files_containing_short_names[name].add(ck_person.file_name)
+                if '  ' in oline:
+                    print('{}:{} : suspicious spaces'.format(ck_person.file_name, name))
 
     years_keys = sorted(long_names_in_years.keys())
     for key in years_keys:

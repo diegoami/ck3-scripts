@@ -10,4 +10,4 @@ if __name__ == "__main__":
     ppl_file = os.path.join(dir_mds, 'people.md')
     ck_people = get_ck_people(ppl_file)
     all_names = get_all_names(dir_mds)
-    fix_deaths(dir_mds, dir_mds, all_names["death_fixes"])
+    fix_deaths(dir_mds, all_names)
