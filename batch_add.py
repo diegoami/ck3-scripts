@@ -19,6 +19,7 @@ if __name__ == "__main__":
     def _s(short_name, birth_year, death_year):
         return fix_short_deaths(all_names, short_name, birth_year, death_year)
 
-    _c("Mael-Muire Gormflaithdohtor,1268,,Duchess of East Seaxe,hEochadha")
+    #_c("Mael-Muire Gormflaithdohtor,1268,,Duchess of East Seaxe,hEochadha")
     #_f("Princess Marthoc")
     #_s("Martha Kyle", 1210, )
+    _c("Udalschalk mag Eilika,1096,1162,Duke of Meath,Cilli")

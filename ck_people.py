@@ -96,7 +96,8 @@ def add_person(s):
     ck_people = get_ck_people(full_file)
     out_file = os.path.join(dir_mds, 'people.md')
     sl = s.split(',')
-    to_add_person = CkPerson(name=sl[0], birth_year=sl[1], death_year=sl[2], title=sl[3], house=sl[4], file_name=None, long_name=None, full_line=None)
+    to_add_person = CkPerson(name=sl[0], birth_year=sl[1], death_year=sl[2], title=sl[3], house=sl[4], file_name=None, long_name=None, full_line=None,
+                             years="{}-{}".format(sl[1], sl[2]))
     to_add_person = complete_person(to_add_person)
     add_ck_person(ck_people, out_file, to_add_person)
     full_file_name = os.path.join(dir_mds, 'p', to_add_person.file_name)
