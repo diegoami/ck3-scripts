@@ -71,8 +71,14 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
     file_to_long_name = {}
     short_names_in_file = defaultdict(set)
     files_containing_short_names = defaultdict(set)
+    fathers = defaultdict(set)
+    mothers = defaultdict(set)
 
     for ck_person in ck_people:
+        person_stack = []
+        has_father = []
+        has_mother = []
+        level, spaces = 0, 0
         full_file = os.path.join(dir_mds, ck_person.file_name)
         olines, plines, alines = find_family_tree(full_file)
         long_name_title = plines[0][2:].strip()
@@ -85,12 +91,15 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
                 for line in file:
                     print(line.replace(first_line, ck_person.long_name), end='')
             death_fixes.add(ck_person)
+        person_stack.append((ck_person.long_name))
+
         long_name_to_file[ck_person.long_name] = ck_person.file_name
         file_to_long_name[ck_person.file_name] = ck_person.long_name
         long_names_in_years[int(ck_person.birth_year)].add(ck_person.long_name)
         long_lines_in_years[int(ck_person.birth_year)].add(first_line)
 
         for oline in olines[1:]:
+            cspaces = len(oline)-len(oline.strip())
             oline = oline.strip()
             if ',' in oline:
                 name, years = [x.strip() for x in oline.strip().split(',')[:2]]
@@ -101,7 +110,31 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
                 files_containing_short_names[name].add(ck_person.file_name)
                 if '  ' in oline:
                     print('{}:{} : suspicious spaces'.format(ck_person.file_name, name))
+            if cspaces > spaces:
+                if person_stack[-1] in has_father:
+                    mothers[person_stack[-1]].add(oline)
+                    has_mother.append(person_stack[-1])
 
+                else:
+                    fathers[person_stack[-1]].add(oline)
+                    has_father.append(person_stack[-1])
+
+                spaces = cspaces
+                person_stack.append(oline)
+            elif cspaces == spaces:
+                if person_stack[-2] in has_father:
+                    if not person_stack[-2] in has_mother:
+                        mothers[person_stack[-2]].add(oline)
+                        person_stack.pop()
+            else:
+                person_stack.pop()
+                if person_stack[-1] in has_father:
+                    if not person_stack[-1] in has_mother:
+                        mothers[person_stack[-1]].add(oline)
+                        has_mother.append(person_stack[-1])
+                person_stack.append(oline)
+                spaces = cspaces
+        pass
     years_keys = sorted(long_names_in_years.keys())
     for key in years_keys:
         for long_name in long_names_in_years[key]:
@@ -123,7 +156,9 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
             "long_name_to_short_name": long_name_to_short_name,
             "short_lines_in_years": short_lines_in_years,
             "long_lines_in_years": long_lines_in_years,
-            "death_fixes": death_fixes }
+            "death_fixes": death_fixes,
+            "mothers": mothers,
+            "fathers": fathers}
 
 def fix_short_deaths(all_names, short_name, birth_year, death_year):
     if short_name in all_names["files_containing_short_names"]:

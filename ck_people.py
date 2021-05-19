@@ -1,7 +1,7 @@
 import re
 from collections import namedtuple
 import os
-CkPerson = namedtuple('CkPerson', ['name', 'file_name', 'birth_year', 'death_year', 'title', 'house', 'long_name', 'full_line' ])
+CkPerson = namedtuple('CkPerson', ['name', 'file_name', 'birth_year', 'death_year', 'title', 'house', 'long_name', 'full_line', 'years' ])
 
 def get_long_name_from_person(name, title, birth_year, death_year, house):
     if title:
@@ -42,7 +42,7 @@ def get_ck_person(line):
         long_name = get_long_name_from_person(name, title, birth_year, death_year, house)
 
         ck_person = CkPerson(name=name, file_name=file_name, birth_year=birth_year, death_year=death_year,
-                             title=title, house=house, long_name=long_name, full_line=full_line)
+                             title=title, house=house, long_name=long_name, full_line=full_line, years=years)
         return ck_person
     return None
 

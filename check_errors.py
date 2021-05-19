@@ -12,5 +12,11 @@ if __name__ == "__main__":
 
     ck_people = get_ck_people(ppl_file)
     all_names = get_all_names(dir_mds, ppl_file, ck_people)
-    print(all_names["short_name_to_long_name"])
-    print(all_names["long_name_to_short_name"])
+    #print(all_names["short_name_to_long_name"])
+    #print(all_names["long_name_to_short_name"])
+
+    for key, value in all_names["fathers"].items():
+        print(key, value)
+
+    for key, value in all_names["mothers"].items():
+        print(key, value)
