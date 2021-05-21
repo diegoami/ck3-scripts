@@ -2,8 +2,12 @@ import os
 import sys
 from file_parse import find_family_tree
 
-dir_mds = os.environ.get("CK_DIR")
-person_mds = os.path.join(dir_mds, 'p')
+
+from find_references_history import find_references
+from ck_people import get_ck_people
+from file_parse import find_family_tree, split_file_references
+from people_walk import get_all_names
+
 
 def find_best_dinasty(person_mds, s):
 
@@ -36,6 +40,22 @@ def find_best_dinasty(person_mds, s):
             print(line)
 
 
+def find_family(fathers, mothers, s, depth=4):
+    if depth >= 0:
+        sn = (4-depth)*4*' '
+        print("{}{}".format(sn, s))
+        for father in fathers[s]:
+            find_family(fathers, mothers, father, depth-1)
+        for mother in mothers[s]:
+            find_family(fathers, mothers, mother, depth-1)
+
 if __name__ == "__main__":
     s = sys.argv[1]
-    find_best_dinasty(person_mds, s)
+    #find_best_dinasty(person_mds, s)
+    dir_mds = os.environ.get("CK_DIR")
+    ppl_file = os.path.join(dir_mds, 'people.md')
+
+    ck_people = get_ck_people(ppl_file)
+    all_names = get_all_names(dir_mds, ppl_file, ck_people)
+    fathers, mothers = all_names["fathers"], all_names["mothers"]
+    find_family(fathers, mothers, "Duchess Rhiandrech, 1116-1187", 4)

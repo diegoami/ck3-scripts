@@ -67,6 +67,9 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
     death_fixes = set()
     short_name_to_long_name = {}
     long_name_to_short_name = {}
+    short_name_lines_to_long_name_lines = {}
+    long_name_lines_to_short_name_lines = {}
+
     long_name_to_file = {}
     file_to_long_name = {}
     short_names_in_file = defaultdict(set)
@@ -125,6 +128,7 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
                 if person_stack[-2] in has_father:
                     if not person_stack[-2] in has_mother:
                         mothers[person_stack[-2]].add(oline)
+                        has_father.remove(person_stack[-2])
                         person_stack.pop()
             else:
                 person_stack.pop()
@@ -132,6 +136,7 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
                     if not person_stack[-1] in has_mother:
                         mothers[person_stack[-1]].add(oline)
                         has_mother.append(person_stack[-1])
+                        has_father.remove(person_stack[-1])
                 person_stack.append(oline)
                 spaces = cspaces
         pass
@@ -139,12 +144,15 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
     for key in years_keys:
         for long_name in long_names_in_years[key]:
             for short_name in short_names_in_years[key]:
-
                 if all([x in long_name.split() for x in short_name.split()]):
                     if long_name in long_name_to_short_name:
                         print("Short name ambigous {}, {} for {}".format(short_name, long_name_to_short_name[long_name], key))
                     short_name_to_long_name[short_name] = long_name
                     long_name_to_short_name[long_name] = short_name
+    for long_name, short_name in long_name_lines_to_short_name_lines.items():
+        short_name_oline = "{}, {}".format(short_name, long_name.split(',')[1].strip())
+        fathers[short_name_oline] = fathers[short_name_oline].union(fathers[long_name])
+        mothers[short_name_oline] = mothers[short_name_oline].union(mothers[long_name])
 
     return {"long_name_to_file": long_name_to_file,
             "file_to_long_name": file_to_long_name,
