@@ -40,14 +40,14 @@ def find_best_dinasty(person_mds, s):
             print(line)
 
 
-def find_family(fathers, mothers, s, depth=4):
+def find_best_family(fathers, mothers, s, depth=4):
     if depth >= 0:
         sn = (4-depth)*4*' '
         print("{}{}".format(sn, s))
         for father in fathers[s]:
-            find_family(fathers, mothers, father, depth-1)
+            find_best_family(fathers, mothers, father, depth-1)
         for mother in mothers[s]:
-            find_family(fathers, mothers, mother, depth-1)
+            find_best_family(fathers, mothers, mother, depth-1)
 
 if __name__ == "__main__":
     s = sys.argv[1]

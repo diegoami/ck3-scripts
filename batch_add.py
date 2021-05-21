@@ -4,7 +4,7 @@ import sys
 import os
 from functools import partial
 
-from find_best_dinasty import find_best_dinasty
+from find_best_dinasty import find_best_dinasty, find_best_family
 from people_walk import fix_short_deaths, get_all_names
 
 if __name__ == "__main__":
@@ -13,9 +13,10 @@ if __name__ == "__main__":
     dir_mds = os.environ.get("CK_DIR")
     person_mds = os.path.join(dir_mds, 'p')
     all_names = get_all_names(dir_mds)
+    mothers, fathers = all_names["mothers"], all_names["fathers"]
     _c = ck_people.add_person
-    def _f(s):
-        return find_best_dinasty(person_mds, s)
+    def _f(s, d):
+        return find_best_family(fathers, mothers, s, d)
     def _s(short_name, birth_year, death_year):
         return fix_short_deaths(all_names, short_name, birth_year, death_year)
 
@@ -30,4 +31,8 @@ if __name__ == "__main__":
     #_c("Cristina nic Cristina,1277,,Duchess of Connacht,gCais-Macclesfield")
     #_c("Gormlaith nic Gormlaith,1231,,Countess of Ui-Mhaine,gCais-Gaillimhe")
     #_c("Muirenne nic Pierre,1275,,Duchess of Ulster,gCais-Macclesfield")
-    _c("Catriona nic Bruatur,1261,,Lady of Ceredigion,Llewellyn")
+    #_c("Catriona nic Bruatur,1261,,Lady of Ceredigion,Llewellyn")
+    #_c("Coilboth mag Etain,1287,,Lord of Brycheiniog,Briain")
+    #_f("Narbflaith Got, 1224-", 3)
+    _c("Der-Lugdach,1266,,Duchess of Westfalen,gCais-Mathrafal")
+    _c("Slaine Eithnedohtor,1268,,,gCais-Mathrafal")
