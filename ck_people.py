@@ -1,6 +1,7 @@
 import re
 from collections import namedtuple
 import os
+from collections import defaultdict
 CkPerson = namedtuple('CkPerson', ['name', 'file_name', 'birth_year', 'death_year', 'title', 'house', 'long_name', 'full_line', 'years' ])
 
 def get_long_name_from_person(name, title, birth_year, death_year, house):
@@ -116,5 +117,13 @@ def add_person(s):
     print(to_add_person.full_line)
     return to_add_person.full_line
 
+
+def write_houses(ck_people):
+    houses = defaultdict(set)
+    for ck_person in ck_people:
+        if ck_person.house:
+            houses[ck_person.house].add((ck_person.long_name, ck_person.file_name))
+
+    return houses
 
 
