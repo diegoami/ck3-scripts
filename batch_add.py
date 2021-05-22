@@ -40,7 +40,9 @@ if __name__ == "__main__":
     #_c("Gruffydd III ap Maredudd,1064,1140,Petty King of Deheubarth,Caerloyw-Penfro")
     #_c("Gruffydd ap Maredudd,1116,1177,,Caerloyw-Penfro")
     #_c("Domnall mag Ailpin,1119,1180,,gCais-Fathain")
-    _f("Countess Flann nig Olav of Ui Mhaine, 1097-1161, Vedrafjord")
+    _f("Earl Idwal ap Gruffydd of Perfeddwlad, 1054-1112, Seisyll")
     #_c("Meilys I ap Rhiwallon,1110,1165,Duke of Powys,gCais-Fathain")
     #_c("Flann nig Olav,1097,1161,Countess of Ui Mhaine,Vedrafjord")
-
+    #_c("Bruatur mac Enguerrand,1108,1135,,gCais-Inis")
+    #_c("Aed mac Domnall,1078,1147,Earl of Ennis,Neill Noigiallaich")
+    #_c("Idwal ap Gruffydd,1054,1112,Earl of Perfeddwlad, Seisyll")
