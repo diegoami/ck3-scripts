@@ -115,7 +115,7 @@ def add_person(s):
     else:
         print("{} exists".format(full_file_name))
     print(to_add_person.full_line)
-    return to_add_person.full_line
+    return (to_add_person.full_line, to_add_person.long_name)
 
 
 def write_houses(ck_people):

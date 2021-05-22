@@ -58,4 +58,10 @@ if __name__ == "__main__":
     ck_people = get_ck_people(ppl_file)
     all_names = get_all_names(dir_mds, ppl_file, ck_people)
     fathers, mothers = all_names["fathers"], all_names["mothers"]
-    find_family(fathers, mothers, "Duchess Rhiandrech, 1116-1187", 4)
+    for child, father in fathers.items():
+        print(child, father)
+    for child, mother in mothers.items():
+        print(child, mother)
+
+
+    #find_family(fathers, mothers, "Duchess Rhiandrech, 1116-1187", 4)

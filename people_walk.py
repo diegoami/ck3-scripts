@@ -64,10 +64,12 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
     short_names_in_years = defaultdict(set)
     short_lines_in_years = defaultdict(set)
     long_lines_in_years = defaultdict(set)
+    long_lines_in_years = defaultdict(set)
     death_fixes = set()
     short_name_to_long_name = {}
     long_name_to_short_name = {}
-    long_name_lines_to_short_name_lines = {}
+    long_name_lines_to_short_name_lines = defaultdict(set)
+    short_name_lines_to_long_name_lines = defaultdict(set)
 
     long_name_to_file = {}
     file_to_long_name = {}
@@ -93,14 +95,15 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
                 for line in file:
                     print(line.replace(first_line, ck_person.long_name), end='')
             death_fixes.add(ck_person)
-        person_stack.append((ck_person.long_name))
+        person_stack.append(0)
 
         long_name_to_file[ck_person.long_name] = ck_person.file_name
         file_to_long_name[ck_person.file_name] = ck_person.long_name
         long_names_in_years[int(ck_person.birth_year)].add(ck_person.long_name)
         long_lines_in_years[int(ck_person.birth_year)].add(first_line)
 
-        for oline in olines[1:]:
+        for eindex, oline in enumerate(olines[1:]):
+            index = eindex+1
             cspaces = len(oline)-len(oline.strip())
             oline = oline.strip()
             if ',' in oline:
@@ -114,27 +117,27 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
                     print('{}:{} : suspicious spaces'.format(ck_person.file_name, name))
             if cspaces > spaces:
                 if person_stack[-1] in has_father:
-                    mothers[person_stack[-1]].add(oline)
+                    mothers[olines[person_stack[-1]].strip()].add(oline)
                     has_mother.append(person_stack[-1])
                 else:
-                    fathers[person_stack[-1]].add(oline)
+                    fathers[olines[person_stack[-1]].strip()].add(oline)
                     has_father.append(person_stack[-1])
                 spaces = cspaces
-                person_stack.append(oline)
+                person_stack.append(index)
             elif cspaces == spaces:
                 if person_stack[-2] in has_father:
                     if not person_stack[-2] in has_mother:
-                        mothers[person_stack[-2]].add(oline)
+                        mothers[olines[person_stack[-2]].strip()].add(oline)
                         has_father.remove(person_stack[-2])
                         person_stack.pop()
             else:
                 person_stack.pop()
                 if person_stack[-1] in has_father:
                     if not person_stack[-1] in has_mother:
-                        mothers[person_stack[-1]].add(oline)
+                        mothers[olines[person_stack[-1]].strip()].add(oline)
                         has_mother.append(person_stack[-1])
                         has_father.remove(person_stack[-1])
-                person_stack.append(oline)
+                person_stack.append(index)
                 spaces = cspaces
         pass
     years_keys = sorted(long_names_in_years.keys())
@@ -146,6 +149,13 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
                         print("Short name ambigous {}, {} for {}".format(short_name, long_name_to_short_name[long_name], key))
                     short_name_to_long_name[short_name] = long_name
                     long_name_to_short_name[long_name] = short_name
+
+    for long_name, short_name in long_name_to_short_name.items():
+        short_name_oline = "{}, {}".format(short_name, long_name.split(',')[1].strip())
+        fathers[short_name_oline] = fathers[long_name] = fathers[short_name_oline].union(fathers[long_name])
+        mothers[short_name_oline] = mothers[long_name] = mothers[short_name_oline].union(mothers[long_name])
+        long_name_lines_to_short_name_lines[long_name].add(short_name_oline)
+        short_name_lines_to_long_name_lines[short_name_oline].add(long_name)
 
     return {"long_name_to_file": long_name_to_file,
             "file_to_long_name": file_to_long_name,

@@ -20,28 +20,38 @@ def add_references(dir_mds, ck_people, all_names):
 
         write_lines.append('\n')
         write_lines.append("# REFERENCES\n")
-        write_lines.append("\n")
-
-        write_lines.append("## ANCESTORS\n")
+        ancestor_lines, descendant_lines = [], []
         for short_name in all_names["short_names_in_file"][ck_person.file_name]:
-
             if short_name in all_names["short_name_to_long_name"]:
                 long_name = all_names["short_name_to_long_name"][short_name]
                 file_l_name = all_names["long_name_to_file"][long_name].split('/')[1]
-                write_lines.append("* [{}]({})\n".format(long_name, file_l_name))
                 ancestors[ck_person.long_name].add(long_name)
-        write_lines.append("\n")
-        write_lines.append("## DESCENDANTS\n")
+                ancestor_lines.append((long_name, file_l_name))
         if ck_person.long_name in all_names["long_name_to_short_name"]:
             curr_short_name = all_names["long_name_to_short_name"][ck_person.long_name]
-            for file_name in all_names["files_containing_short_names"][curr_short_name]:
+            for file_name in sorted(all_names["files_containing_short_names"][curr_short_name]):
                 long_name = all_names["file_to_long_name"][file_name]
                 file_l_name = file_name.split('/')[1]
-                write_lines.append("* [{}]({})\n".format(long_name, file_l_name))
                 descendents[ck_person.long_name].add(long_name)
+                descendant_lines.append((long_name, file_l_name))
+
+        ancestor_lines = sorted(ancestor_lines, key=lambda x: x[1])
+        descendant_lines = sorted(descendant_lines, key=lambda x: x[1])
+
+        write_lines.append("\n")
+        write_lines.append("## ANCESTORS\n")
+        for long_name, file_name in ancestor_lines:
+            write_lines.append("* [{}]({})\n".format(long_name, file_name))
+
+        write_lines.append("\n")
+        write_lines.append("## DESCENDANTS\n")
+        for long_name, file_name in descendant_lines:
+            write_lines.append("* [{}]({})\n".format(long_name, file_name))
+
         write_lines.append("\n")
         write_lines.append("## RELATIVES\n")
         write_lines.append("\n")
+
         write_lines.append("##### END RELATIVES \n")
 
         write_lines.append("## HISTORY")

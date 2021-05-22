@@ -14,9 +14,11 @@ if __name__ == "__main__":
     person_mds = os.path.join(dir_mds, 'p')
     all_names = get_all_names(dir_mds)
     mothers, fathers = all_names["mothers"], all_names["fathers"]
+
     _c = ck_people.add_person
-    def _f(s, d):
-        return find_best_family(fathers, mothers, s, d)
+    def _f(s):
+
+        return find_best_family(fathers, mothers, s, 4)
     def _s(short_name, birth_year, death_year):
         return fix_short_deaths(all_names, short_name, birth_year, death_year)
 
@@ -33,6 +35,12 @@ if __name__ == "__main__":
     #_c("Muirenne nic Pierre,1275,,Duchess of Ulster,gCais-Macclesfield")
     #_c("Catriona nic Bruatur,1261,,Lady of Ceredigion,Llewellyn")
     #_c("Coilboth mag Etain,1287,,Lord of Brycheiniog,Briain")
-    #_f("Narbflaith Got, 1224-", 3)
-    _c("Der-Lugdach,1266,,Duchess of Westfalen,gCais-Mathrafal")
-    _c("Slaine Eithnedohtor,1268,,,gCais-Mathrafal")
+    #_c("Der-Lugdach,1266,,Duchess of Westfalen,gCais-Mathrafal")
+    #_c("Slaine Eithnedohtor,1268,,,gCais-Mathrafal")
+    #_c("Gruffydd III ap Maredudd,1064,1140,Petty King of Deheubarth,Caerloyw-Penfro")
+    #_c("Gruffydd ap Maredudd,1116,1177,,Caerloyw-Penfro")
+    #_c("Domnall mag Ailpin,1119,1180,,gCais-Fathain")
+    _f("Countess Flann nig Olav of Ui Mhaine, 1097-1161, Vedrafjord")
+    #_c("Meilys I ap Rhiwallon,1110,1165,Duke of Powys,gCais-Fathain")
+    #_c("Flann nig Olav,1097,1161,Countess of Ui Mhaine,Vedrafjord")
+
