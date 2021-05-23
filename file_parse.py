@@ -61,6 +61,34 @@ def split_file_references(full_file):
     return before_lines, ref_lines, after_lines
 
 
+def split_file_relatives(full_file):
+    before_lines, ref_lines, after_lines = [], [], []
+    with open(full_file, 'r', encoding='latin1') as f:
+
+        all_lines = f.readlines()
+        empty_lines = 0
+        in_reference = 0
+        for all_line in all_lines:
+            if "RELATIVES" in all_line:
+                in_reference = 1
+                continue
+            elif "END RELATIVES" in all_line:
+                in_reference = 2
+                continue
+            elif in_reference == 0 and len(all_line.strip()) == 0:
+                empty_lines += 1
+                if empty_lines <= 1:
+                    before_lines.append(all_line)
+            elif in_reference == 0:
+                empty_lines = 0
+                before_lines.append(all_line)
+            elif in_reference == 1:
+                ref_lines.append(all_line)
+            elif in_reference == 2 and not "END RELATIVES" in all_line:
+                after_lines.append(all_line)
+    return before_lines, ref_lines, after_lines
+
+
 def split_portrait_references(full_file):
     before_lines, ref_lines, after_lines = [], [], []
     with open(full_file, 'r', encoding='latin1') as f:
