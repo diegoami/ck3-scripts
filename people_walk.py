@@ -129,15 +129,16 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
                 if person_stack[-2] in has_father:
                     if not person_stack[-2] in has_mother:
                         mothers[olines[person_stack[-2]].strip()].add(oline)
-                        has_father.remove(person_stack[-2])
                         person_stack.pop()
             else:
                 person_stack.pop()
                 if person_stack[-1] in has_father:
-                    if not person_stack[-1] in has_mother:
+                    while person_stack and  person_stack[-1] in has_mother:
+                        person_stack.pop()
+                    if person_stack:
                         mothers[olines[person_stack[-1]].strip()].add(oline)
                         has_mother.append(person_stack[-1])
-                        has_father.remove(person_stack[-1])
+
                 person_stack.append(index)
                 spaces = cspaces
         pass
