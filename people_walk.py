@@ -30,21 +30,22 @@ def check_photos(target_year, all_names, dir_mds):
             for line in lines:
                 life_years = line.split(',')[1].split('-')
                 long_name = line.split(',')[0]
-                file_name = all_names["long_name_to_file"][line]
-                dir_name, file_extension = os.path.splitext(file_name)
-                dir_img = os.path.join(dir_mds, dir_name)
-                age_years = []
-                if len(life_years) > 1 and life_years[1]:
-                    birth_year, death_year = int(life_years[0]), int(life_years[1])
-                else:
-                    birth_year, death_year = int(life_years[0]), None
-                if os.path.isdir(dir_img):
-                    for img_name in os.listdir(dir_img):
-                        img_year_s, img_ext = os.path.splitext(img_name)
-                        img_year = int(img_year_s)
-                        age_years.append(img_year-birth_year)
-                if not death_year or death_year > target_year:
-                    all_birthdays.append((target_year - birth_year, long_name, age_years, death_year, birth_year))
+                if line in all_names["long_name_to_file"]:
+                    file_name = all_names["long_name_to_file"][line]
+                    dir_name, file_extension = os.path.splitext(file_name)
+                    dir_img = os.path.join(dir_mds, dir_name)
+                    age_years = []
+                    if len(life_years) > 1 and life_years[1]:
+                        birth_year, death_year = int(life_years[0]), int(life_years[1])
+                    else:
+                        birth_year, death_year = int(life_years[0]), None
+                    if os.path.isdir(dir_img):
+                        for img_name in os.listdir(dir_img):
+                            img_year_s, img_ext = os.path.splitext(img_name)
+                            img_year = int(img_year_s)
+                            age_years.append(img_year-birth_year)
+                    if not death_year or death_year > target_year:
+                        all_birthdays.append((target_year - birth_year, long_name, age_years, death_year, birth_year))
     allbs = sorted(all_birthdays, key=lambda x: x[0], reverse=True)
     for x in allbs:
         if x[2]:
