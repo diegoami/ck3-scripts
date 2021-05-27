@@ -14,6 +14,14 @@ class MainPerson:
         self.long_name = None
         self.short_name = None
 
+    def get_name(self):
+        if self.long_name:
+            return self.long_name
+
+        if self.short_name:
+            return self.short_name
+
+        return ""
     def set_name(self, name):
         if name == '?':
             return
@@ -32,9 +40,9 @@ class MainPerson:
 
     def __str__ (self):
         return "name={}, short_name={}, father={}, mother={}, children={}".format(self.long_name, self.short_name,
-                   self.father.short_name if self.father else "",
-                   self.mother.short_name if self.mother else "",
-                   [x.short_name for x in self.children])
+                   self.father.get_name() if self.father else "",
+                   self.mother.get_name() if self.mother else "",
+                   [x.get_name() for x in self.children])
 
 def get_all_persons(all_names):
     all_persons = defaultdict(MainPerson)
@@ -43,7 +51,7 @@ def get_all_persons(all_names):
     long_name_to_short_name = all_names["long_name_to_short_name"]
     short_name_to_long_name = all_names["short_name_to_long_name"]
 
-    def process_rel_list(relatives):
+    def process_rel_list(relatives, is_father=True):
         for child, rels in relatives.items():
             if (len(rels) > 1):
                 print("{} has too many parents: {}".format(child, rels))
@@ -53,12 +61,15 @@ def get_all_persons(all_names):
                 else:
                     key_name = child
                 all_persons[key_name].set_name(child)
-                all_persons[key_name].father = all_persons[rel]
+                if is_father:
+                    all_persons[key_name].father = all_persons[rel]
+                else:
+                    all_persons[key_name].mother = all_persons[rel]
                 all_persons[rel].set_name(rel)
                 all_persons[rel].children.add(all_persons[key_name])
 
     process_rel_list(fathers)
-    process_rel_list(mothers)
+    process_rel_list(mothers, False)
     return all_persons
 
 
