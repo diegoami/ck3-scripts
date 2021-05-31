@@ -78,7 +78,7 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
     files_containing_short_names = defaultdict(set)
     fathers = defaultdict(set)
     mothers = defaultdict(set)
-
+    index = -1
     for ck_person in ck_people:
         try:
             person_stack = []
@@ -105,7 +105,7 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
             long_lines_in_years[int(ck_person.birth_year)].add(first_line)
 
             for eindex, oline in enumerate(olines[1:]):
-                index = eindex+1
+                index = eindex + 1
                 cspaces = len(oline)-len(oline.strip())
                 oline = oline.strip()
                 if ',' in oline:
@@ -144,7 +144,7 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
                     spaces = cspaces
             pass
         except:
-            print("Error processing file {} at row .".format(ck_person.file_name, index))
+            print("Error processing file {} at row {}.".format(ck_person.file_name, index))
     years_keys = sorted(long_names_in_years.keys())
     for key in years_keys:
         for long_name in long_names_in_years[key]:
@@ -152,6 +152,9 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
                 if all([x in long_name.split() for x in short_name.split()]):
                     if long_name in long_name_to_short_name:
                         print("Short name ambigous {}, {} for {}".format(short_name, long_name_to_short_name[long_name], key))
+                    # recovered_short_name = "{},{}".format(short_name, long_name.split(',')[1])
+                    # short_name_to_long_name[recovered_short_name] = long_name
+                    # long_name_to_short_name[long_name] = recovered_short_name
                     short_name_to_long_name[short_name] = long_name
                     long_name_to_short_name[long_name] = short_name
 
@@ -174,7 +177,9 @@ def get_all_names(dir_mds=None, ppl_file=None, ck_people=None):
             "long_lines_in_years": long_lines_in_years,
             "death_fixes": death_fixes,
             "mothers": mothers,
-            "fathers": fathers}
+            "fathers": fathers,
+            "long_name_lines_to_short_name_lines": long_name_lines_to_short_name_lines,
+            "short_name_lines_to_long_name_lines": short_name_lines_to_long_name_lines}
 
 def fix_short_deaths(all_names, short_name, birth_year, death_year):
     if short_name in all_names["files_containing_short_names"]:

@@ -51,13 +51,16 @@ def get_all_persons(all_names):
     long_name_to_short_name = all_names["long_name_to_short_name"]
     short_name_to_long_name = all_names["short_name_to_long_name"]
 
+    long_name_lines_to_short_name_lines = all_names["long_name_lines_to_short_name_lines"]
+    short_name_lines_to_long_name_lines = all_names["short_name_lines_to_long_name_lines"]
+
     def process_rel_list(relatives, is_father=True):
         for child, rels in relatives.items():
             if (len(rels) > 1):
                 print("{} has too many parents: {}".format(child, rels))
             for rel in rels:
-                if child in short_name_to_long_name:
-                    key_name = short_name_to_long_name[child]
+                if child in short_name_lines_to_long_name_lines:
+                    key_name = list(short_name_lines_to_long_name_lines[child]).pop()
                 else:
                     key_name = child
                 all_persons[key_name].set_name(child)
@@ -67,6 +70,12 @@ def get_all_persons(all_names):
                     all_persons[key_name].mother = all_persons[rel]
                 all_persons[rel].set_name(rel)
                 all_persons[rel].children.add(all_persons[key_name])
+                if rel in short_name_lines_to_long_name_lines:
+                    long_rel_names = short_name_lines_to_long_name_lines[rel]
+                    for long_rel_name in long_rel_names:
+                        all_persons[long_rel_name].set_name(long_rel_name)
+                        all_persons[long_rel_name].children = all_persons[long_rel_name].children.union(all_persons[rel].children)
+                        all_persons[rel].set_name(long_rel_name)
 
     process_rel_list(fathers)
     process_rel_list(mothers, False)
