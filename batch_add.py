@@ -116,4 +116,6 @@ if __name__ == "__main__":
     #_c("Wulfgar,1282,,Duke of Berry,Randolph")
     #_c("Comgan mag Aine,1302,,Count of Issoudun,gCais-Berkhamsted")
     #_f("Count Comgan mag Aine of Issoudun, 1302-, gCais-Berkhamsted")
-    _c("Dimmasach mag Aine,1218,1279,,gCais-Berkhamsted")
+    #_c("Dimmasach mag Aine,1218,1279,,gCais-Berkhamsted")
+    #_c("Uilliam Lorcanson,1283,,Earl of Evreux,Briain")
+    #_f("Countess Aethelburh of Alencon, 1285-, Briain")
