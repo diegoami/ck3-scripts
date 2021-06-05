@@ -119,3 +119,5 @@ if __name__ == "__main__":
     #_c("Dimmasach mag Aine,1218,1279,,gCais-Berkhamsted")
     #_c("Uilliam Lorcanson,1283,,Earl of Evreux,Briain")
     #_f("Countess Aethelburh of Alencon, 1285-, Briain")
+    #_c("Skjaldvor Drifadohtor,1267,,Court Chaplain of Gwynedd,Hagalin")
+    _f("Court Chaplain Skjaldvor Drifadohtor of Gwynedd, 1267-, Hagalin")
