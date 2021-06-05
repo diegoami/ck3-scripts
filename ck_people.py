@@ -81,7 +81,6 @@ def add_ck_person(ck_people, ppl_file, new_person):
             if new_person.name == ck_person.name:
                 print("{} exists".format(new_person.name))
                 added_person = True
-                continue
             if not added_person and new_person.name < ck_person.name:
                 fp.write('{}\n'.format(new_person.full_line.rstrip()))
                 print("{} added".format(new_person.name))
