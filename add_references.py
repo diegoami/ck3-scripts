@@ -16,6 +16,8 @@ def add_references(dir_mds, ck_people, all_names, all_persons):
     parents = defaultdict(set)
     children = defaultdict(set)
     great_parents = defaultdict(set)
+    great_great_parents = defaultdict(set)
+    siblings = defaultdict(set)
     long_name_to_file = all_names["long_name_to_file"]
     for ck_person in ck_people:
         full_file = os.path.join(dir_mds, ck_person.file_name)
@@ -35,7 +37,8 @@ def add_references(dir_mds, ck_people, all_names, all_persons):
         children[ck_person.long_name] = set(current_person.children)
         children_lines += current_person.children
 
-        great_parents_lines = []
+        great_parents_lines, great_great_parents_lines = [], []
+        siblings_lines = []
 
         for parent in parents[ck_person.long_name]:
             if parent:
@@ -47,6 +50,19 @@ def add_references(dir_mds, ck_people, all_names, all_persons):
                     if person_parent.mother:
                         great_parents[ck_person.long_name].add(person_parent.mother)
                         great_parents_lines.append(person_parent.mother)
+                    siblings[ck_person.long_name] = siblings[ck_person.long_name].union(person_parent.children)
+
+        siblings_lines = list(siblings[ck_person.long_name])
+        for great_parent in great_parents[ck_person.long_name]:
+            if great_parent:
+                person_great_parent = all_persons[great_parent.get_name()]
+                if person_great_parent:
+                    if person_great_parent.father:
+                        great_great_parents[ck_person.long_name].add(person_great_parent.father)
+                        great_great_parents_lines.append(person_great_parent.father)
+                    if person_great_parent.mother:
+                        great_great_parents[ck_person.long_name].add(person_great_parent.mother)
+                        great_great_parents_lines.append(person_great_parent.mother)
 
         write_lines.append("\n")
         write_lines.append("## PARENTS \n")
@@ -54,9 +70,9 @@ def add_references(dir_mds, ck_people, all_names, all_persons):
             #write_lines.append("* [{}]({})\n".format(long_name, file_name))
             if parent:
                 if parent.long_name:
-                    write_lines.append("* [{}]({})\n".format(parent.get_name(), long_name_to_file[parent.get_name()]))
-                elif parent.get_name():
-                    write_lines.append("* {}\n".format(parent.get_name()))
+                    write_lines.append("* [{}]({})\n".format(parent.get_name(), long_name_to_file[parent.get_name()].split('/')[1]))
+                #if parent.get_name():
+                #    write_lines.append("* {}\n".format(parent.get_name()))
 
 
         write_lines.append("\n")
@@ -64,26 +80,38 @@ def add_references(dir_mds, ck_people, all_names, all_persons):
         for child in children_lines:
             #write_lines.append("* [{}]({})\n".format(long_name, file_name))
             if child.long_name:
-                write_lines.append("* [{}]({})\n".format(child.get_name(), long_name_to_file[child.get_name()]))
-            elif child.get_name():
-                write_lines.append("* {}\n".format(child.get_name()))
-        write_lines.append("\n")
+                write_lines.append("* [{}]({})\n".format(child.get_name(), long_name_to_file[child.get_name()].split('/')[1]))
+            #if child.get_name():
+            #    write_lines.append("* {}\n".format(child.get_name()))
+
 
         write_lines.append("\n")
         write_lines.append("## GREAT-PARENTS \n")
         for great_parent in great_parents_lines:
             # write_lines.append("* [{}]({})\n".format(long_name, file_name))
             if great_parent.long_name:
-                write_lines.append("* [{}]({})\n".format(great_parent.get_name(), long_name_to_file[great_parent.get_name()]))
-            elif great_parent.get_name():
-                write_lines.append("* {}\n".format(great_parent.get_name()))
+                write_lines.append("* [{}]({})\n".format(great_parent.get_name(), long_name_to_file[great_parent.get_name()].split('/')[1]))
+            #if great_parent.get_name():
+            #    write_lines.append("* {}\n".format(great_parent.get_name()))
+
+
         write_lines.append("\n")
+        write_lines.append("## GREAT-GREAT-PARENTS \n")
+        for great_great_parent in great_great_parents_lines:
+            # write_lines.append("* [{}]({})\n".format(long_name, file_name))
+            if great_great_parent.long_name:
+                write_lines.append("* [{}]({})\n".format(great_great_parent.get_name(), long_name_to_file[great_great_parent.get_name()].split('/')[1]))
+            #if great_great_parent.get_name():
+            #   write_lines.append("* {}\n".format(great_great_parent.get_name()))
+
 
         write_lines.append("## SIBLINGS\n")
-        write_lines.append("\n")
-        write_lines.append("##### END SIBLINGS  \n")
+        for sibling in siblings_lines:
+            if sibling.long_name and sibling.long_name != ck_person.long_name:
+                write_lines.append("* [{}]({})\n".format(sibling.get_name(), long_name_to_file[sibling.get_name()].split('/')[1]))
 
-        write_lines.append("## HISTORY")
+
+        write_lines.append(" \n## HISTORY")
         write_lines.append("\n")
         if ck_person.file_name in history_references:
             for history_name in sorted(history_references[ck_person.file_name]):
