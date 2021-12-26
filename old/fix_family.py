@@ -1,4 +1,4 @@
-from people_walk import find_family_tree
+from lib.people_walk import find_family_tree
 import os
 
 if __name__ == "__main__":

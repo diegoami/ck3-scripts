@@ -1,8 +1,6 @@
 import os
-from people_walk import living_in, check_photos
-from people_walk import get_all_names, fix_deaths
-from ck_people import get_ck_people
-import sys
+from lib.people_walk import get_all_names, fix_deaths
+from lib.ck_people import get_ck_people
 
 if __name__ == "__main__":
     dir_mds = os.environ.get("CK_DIR")

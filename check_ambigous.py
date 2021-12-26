@@ -1,7 +1,5 @@
 import os
-from people_walk import living_in, check_photos
-from people_walk import get_all_names
-import sys
+from lib.people_walk import get_all_names
 import difflib
 
 def remove_titles(s):

@@ -1,9 +1,8 @@
 import os
 
-from find_references_history import find_references
-from ck_people import get_ck_people
-from file_parse import split_portrait_references
-from people_walk import get_all_names
+from lib.ck_people import get_ck_people
+from lib.file_parse import split_portrait_references
+from lib.people_walk import get_all_names
 
 
 def add_portraits(dir_mds, ck_people, all_names):

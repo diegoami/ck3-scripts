@@ -1,6 +1,5 @@
 
-from ck_people import get_ck_people
-from file_parse import find_family_tree, split_file_references, split_file_relatives
+from lib.ck_people import get_ck_people
 from people_walk import get_all_names
 import os
 from collections import defaultdict

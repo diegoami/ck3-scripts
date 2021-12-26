@@ -1,5 +1,5 @@
 import os
-from ck_people import get_ck_people, write_houses
+from lib.ck_people import get_ck_people, write_houses
 
 
 if __name__ == "__main__":

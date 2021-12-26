@@ -1,5 +1,5 @@
 import sys
-import ck_people
+
 
 def find_family_tree(full_file):
     olines, plines, alines = [], [], []

@@ -1,12 +1,9 @@
 import os
 import sys
-from file_parse import find_family_tree
 
-
-from find_references_history import find_references
-from ck_people import get_ck_people
-from file_parse import find_family_tree, split_file_references
-from people_walk import get_all_names
+from lib.ck_people import get_ck_people
+from lib.file_parse import find_family_tree
+from lib.people_walk import get_all_names
 
 
 def find_best_dinasty(person_mds, s):

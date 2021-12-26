@@ -1,6 +1,6 @@
 import os
-from ck_people import get_ck_people, write_houses
-from file_parse import find_family_tree, split_file_references
+from lib.ck_people import get_ck_people
+from lib.file_parse import find_family_tree
 from collections import defaultdict
 from itertools import chain
 import fileinput

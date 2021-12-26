@@ -1,6 +1,6 @@
 import os
-from people_walk import living_in, check_photos
-from people_walk import get_all_names
+from lib.people_walk import check_photos
+from lib.people_walk import get_all_names
 import sys
 
 if __name__ == "__main__":

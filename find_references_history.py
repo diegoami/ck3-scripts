@@ -1,7 +1,7 @@
 import os
 import re
 from collections import defaultdict
-from ck_people import get_ck_people
+from lib.ck_people import get_ck_people
 
 def find_references(history_mds):
     history_maps = defaultdict(set)

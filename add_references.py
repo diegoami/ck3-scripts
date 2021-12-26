@@ -1,11 +1,11 @@
 import os
 
 from find_references_history import find_references
-from ck_people import get_ck_people
-from file_parse import find_family_tree, split_file_references, split_file_relatives
-from people_walk import get_all_names
+from lib.ck_people import get_ck_people
+from lib.file_parse import split_file_references, split_file_relatives
+from lib.people_walk import get_all_names
 from collections import defaultdict
-from main_person import get_all_persons
+from lib.main_person import get_all_persons
 
 
 

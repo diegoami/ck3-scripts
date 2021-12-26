@@ -1,11 +1,9 @@
-import ck_people
+from lib import ck_people
 
-import sys
 import os
-from functools import partial
 
-from find_best_dinasty import find_best_dinasty, find_best_family
-from people_walk import fix_short_deaths, get_all_names
+from find_best_dinasty import find_best_family
+from lib.people_walk import fix_short_deaths, get_all_names
 
 if __name__ == "__main__":
 
@@ -156,4 +154,10 @@ if __name__ == "__main__":
     #_f("Onbrawst ferch Cadwgan, 1104-1165, Mathrafal")
     #_c("Domnall mac Murchad,1047,1123,Duke of Meath,Cheinnselaig")
     #_c("Derbforgail nic Donnchad,1005,1050,High Queen of Leinster,Briain")
-    _f("High Queen Derbforgail nic Donnchad of Leinster, 1005-1050, Briain")
+    #_f("High Queen Derbforgail nic Donnchad of Leinster, 1005-1050, Briain")
+    #_c("Aubrey,1274,,Duke of Hwicce,gCais-Sherwood")
+    #_f("Duke Aubrey of Hwicce, 1274-, gCais-Sherwood")
+    #_c("Wulfnoth Tagdson,1290,,Duke of Deira,Got")
+    #_f("Duke Wulfnoth Tagdson of Deira, 1290-, Got")
+    #_c("Julienne,1268,,Duchess of Orleans,Antoing")
+    #_f("Duchess Julienne of Orleans, 1268-, Antoing")
